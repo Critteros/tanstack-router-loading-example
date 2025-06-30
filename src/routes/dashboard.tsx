@@ -1,4 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
+
+import { Skeleton } from "../components/ui/skeleton";
 import {
 	Table,
 	TableBody,
@@ -8,7 +10,6 @@ import {
 	TableRow,
 } from "../components/ui/table";
 
-// Funkcja do generowania dużej ilości danych
 function generateData(rows = 1000) {
 	return Array.from({ length: rows }, (_, i) => ({
 		id: i + 1,
@@ -30,9 +31,42 @@ export const Route = createFileRoute("/dashboard")({
 		await new Promise((r) => setTimeout(r, 2400));
 		return { data: generateData(1000) };
 	},
-	pendingComponent: () => (
-		<div className="text-center p-8">Loading data...</div>
-	),
+	pendingComponent: () => {
+		return (
+			<div className="p-4">
+				<h2 className="text-xl font-bold mb-4">Dashboard - Large data table</h2>
+				<Table>
+					<TableHeader>
+						<TableRow>
+							<TableHead>ID</TableHead>
+							<TableHead>Name</TableHead>
+							<TableHead>Email</TableHead>
+							<TableHead>Value</TableHead>
+						</TableRow>
+					</TableHeader>
+					<TableBody>
+						{Array.from({ length: 10 }).map((_, i) => (
+							// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+							<TableRow key={i}>
+								<TableCell>
+									<Skeleton className="h-4 w-8" />
+								</TableCell>
+								<TableCell>
+									<Skeleton className="h-4 w-32" />
+								</TableCell>
+								<TableCell>
+									<Skeleton className="h-4 w-48" />
+								</TableCell>
+								<TableCell>
+									<Skeleton className="h-4 w-16" />
+								</TableCell>
+							</TableRow>
+						))}
+					</TableBody>
+				</Table>
+			</div>
+		);
+	},
 	component: DashboardPage,
 });
 
